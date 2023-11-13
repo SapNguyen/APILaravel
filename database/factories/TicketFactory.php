@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
+use App\Models\Ticket;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Ticket>
@@ -14,6 +15,8 @@ class TicketFactory extends Factory
      *
      * @return array<string, mixed>
      */
+    protected $model = Ticket::class;
+
     public function definition()
     {
         return [

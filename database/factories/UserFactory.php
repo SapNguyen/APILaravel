@@ -20,10 +20,10 @@ class UserFactory extends Factory
     public function definition()
     {
         return [
-            'name' => $this->faker->word,
-            'phone' => $this->faker->word,
-            'email' => $this->faker->word,
-            'password' => $this->faker->word
+            'name' => fake()->name(),
+            'phone' => fake()->unique()->phoneNumber(),
+            'email' => fake()->unique()->safeEmail(),
+            'password' => '123'
         ];
     }
 }
