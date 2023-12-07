@@ -4,6 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\Film;
 use Illuminate\Http\Request;
+use App\Http\Resources\FilmCollection;
+use App\Http\Resources\FilmResource;
+use Illuminate\Support\Facades\Response;
+use App\Http\Requests\StoreFilmRequest;
 
 class FilmController extends Controller
 {
@@ -14,7 +18,8 @@ class FilmController extends Controller
      */
     public function index()
     {
-        //
+        $films = Film::all();
+        return new FilmCollection($films);
     }
 
     /**
@@ -24,7 +29,7 @@ class FilmController extends Controller
      */
     public function create()
     {
-        //
+        
     }
 
     /**
@@ -33,7 +38,7 @@ class FilmController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreFilmRequest $request)
     {
         //
     }
@@ -44,9 +49,20 @@ class FilmController extends Controller
      * @param  \App\Models\Film  $film
      * @return \Illuminate\Http\Response
      */
-    public function show(Film $film)
+    public function show($id)
     {
-        //
+        $film = Film::find($id);
+        if($film){
+            return  response()->json([
+                "status" => "success",
+                "film" => new FilmResource($film)
+            ]);
+        }
+
+        return response()->json([
+            'status' => 'fail',
+            "message" => "id phim không tồn tại"
+        ]);  
     }
 
     /**

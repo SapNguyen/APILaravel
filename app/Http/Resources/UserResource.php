@@ -12,10 +12,17 @@ class UserResource extends JsonResource
      * @param  \Illuminate\Http\Request  $request
      * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
      */
+
+    // public static $wrap = 'user';
+
     public function toArray($request)
     {
         return [
-            'id' => '1'
+            'id' => $this->idtk,
+            'name' => $this->name,
+            'phone' => $this->phone,
+            'email' => $this->email,
+            'password' => $this->password
         ];
     }
 }

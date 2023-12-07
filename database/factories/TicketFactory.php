@@ -20,7 +20,11 @@ class TicketFactory extends Factory
     public function definition()
     {
         return [
-            'tenphim' => $this->faker->word
+            'idshow' => '1',
+            'idtk' => '1',
+            'date_create' => fake()->date(),
+            'seat' => Str::rand(3),
+            'cost' => fake()->digit(),
         ];
     }
 }

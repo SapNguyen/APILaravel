@@ -20,7 +20,15 @@ class FilmFactory extends Factory
     public function definition()
     {
         return [
-            //
+            'name' => fake()->unique()->name(),
+            'image' => 'images/example.jpg',
+            'release' => fake()->date(),
+            'time' => fake()->time(),
+            'censor' => fake()->randomElement(["P","16+","18+","13+"]),
+            'category' => fake()->randomElement(['Hành động', 'Phiêu lưu', "Hoạt hình","Trinh thám"]),
+            'author' => fake()->name(),
+            'actor' => fake()->name(),
+            'language' => fake()->randomElement(["Tiếng Anh","Tiếng Việt"]),
         ];
     }
 }

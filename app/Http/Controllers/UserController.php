@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Http\Resources\UserCollection;
+use App\Http\Resources\UserResource;
 use Illuminate\Support\Facades\Response;
 
 class UserController extends Controller
@@ -15,8 +17,9 @@ class UserController extends Controller
      */
     public function index()
     {
-        return User::orderby('created_at','asc')->get();
-        // return Response::json(['data' => 'data'], 200);
+        $users = User::all();
+        return new UserCollection($users);
+
     }
 
     /**
@@ -37,7 +40,45 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // validate
+        $request->validate([
+            'name' => 'required',
+            'email' => 'required|email:filter',
+            'phone' => 'required',
+            'password' => 'required'
+        ]);
+
+        // kiem tra email ton tai
+        $get_email = User::where('email', '=', $request->email) -> get();
+        if(isset($get_email[0]))
+            return response()->json([
+                'status' => 'fail',
+                'message' => 'Email đã được sử dụng'
+            ]);
+        
+        // kiem tra sdt ton tai
+        $get_phone = User::where('phone', '=', $request->phone)-> get();
+        if(isset($get_phone[0]))
+            return response()->json([
+                'status' => 'fail',
+                'message' => 'SĐT đã tồn tại, vui lòng chọn số khác'
+            ]);
+
+        //them moi user
+        $create = new User;
+        $create->email = $request->email;
+        $create->phone = $request->phone;
+        $create->name = $request->name;
+        $create->password = $request->password;
+        $create->save();
+
+        $user = User::where('email', '=', $request->email)->get();
+
+        return response()->json([
+            'status' => 'success',
+            "message" => "Đăng ký thành công",
+            "user" => new UserResource($user[0])
+        ]);
     }
 
     /**
@@ -48,7 +89,18 @@ class UserController extends Controller
      */
     public function show($id)
     {
-        //
+        $user = User::find($id);
+        if($user){
+            return  response()->json([
+                "status" => "success",
+                "user" => new UserResource($user)
+            ]);
+        }
+
+        return response()->json([
+            'status' => 'fail',
+            "message" => "id tài khoản không tồn tại"
+        ]);     
     }
 
     /**
@@ -59,7 +111,7 @@ class UserController extends Controller
      */
     public function edit($id)
     {
-        //
+        
     }
 
     /**
@@ -71,7 +123,57 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        // validate
+        $request->validate([
+            'name' => 'required',
+            'email' => 'required|email:filter',
+            'phone' => 'required',
+            'password' => 'required'
+        ]);
+
+        $user = User::find($id);
+        if(!isset($user)){
+            return response()->json([
+                'status' => 'fail',
+                "message" => "id tài khoản không tồn tại"
+            ]);
+        }
+
+        // kiem tra email ton tai
+        if($request->email != $user->email){
+            $get_email = User::where('email', '=', $request->email) -> get();
+            if(isset($get_email[0])){
+                    return response()->json([
+                    'status' => 'fail',
+                    'message' => 'Email đã được sử dụng'
+                ]);
+            }
+        }
+        
+        // kiem tra sdt ton tai
+        if($request->phone != $user->phone){
+            $get_phone = User::where('phone', '=', $request->phone)-> get();
+            if(isset($get_phone[0])){
+                return response()->json([
+                    'status' => 'fail',
+                    'message' => 'SĐT đã tồn tại, vui lòng chọn số khác'
+                ]);
+            }
+        }
+
+        // cap nhat user
+        $user->email = $request->email;
+        $user->phone = $request->phone;
+        $user->name = $request->name;
+        $user->password = $request->password;
+        $user->save();
+
+        return response()->json([
+            'status' => 'success',
+            "message" => "Cập nhật thành công",
+            "user" => new UserResource($user)
+        ]);
+        
     }
 
     /**

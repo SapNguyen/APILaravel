@@ -13,13 +13,11 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('tickets', function (Blueprint $table) {
-            $table->id('idve');
-            $table->foreign('idshow')->references('idshow')->on('shows');
-            $table->foreign('idtk')->references('idtk')->on('users');
-            $table->date('date_create');
-            $table->string('seat');
-            $table->string('cost');
+        Schema::create('shows', function (Blueprint $table) {
+            $table->id('idshow');
+            $table->foreign('idphim')->references('idphim')->on('films');
+            $table->date('date');
+            $table->time('time');
         });
     }
 
@@ -30,6 +28,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('tickets');
+        Schema::dropIfExists('shows');
     }
 };

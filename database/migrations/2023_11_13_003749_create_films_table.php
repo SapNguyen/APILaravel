@@ -14,15 +14,16 @@ return new class extends Migration
     public function up()
     {
         Schema::create('films', function (Blueprint $table) {
-            $table->id();
-            $table->string('tenphim');
-            $table->date('congchieu');
-            $table->string('kiemduyet');
-            $table->string('theloai');
-            $table->string('daodien');
-            $table->string('dienvien');
-            $table->string('ngonngu');
-            $table->string('anh');
+            $table->id('idphim');
+            $table->string('name');
+            $table->string('image');
+            $table->date('release');
+            $table->time('runtime');
+            $table->string('censor');
+            $table->string('genre');
+            $table->string('director');
+            $table->string('actor');
+            $table->string('language');
         });
     }
 
