@@ -5,6 +5,10 @@ namespace App\Http\Controllers;
 use App\Models\Promotion;
 use App\Http\Requests\StorePromotionRequest;
 use App\Http\Requests\UpdatePromotionRequest;
+use App\Http\Resources\PromotionCollection;
+use App\Http\Resources\PromotionResource;
+use Illuminate\Http\Request;
+
 
 class PromotionController extends Controller
 {
@@ -15,7 +19,8 @@ class PromotionController extends Controller
      */
     public function index()
     {
-        
+        $promotions = Promotion::all();
+        return new PromotionCollection($promotions);
     }
 
     /**
@@ -45,11 +50,37 @@ class PromotionController extends Controller
      * @param  \App\Models\Promotion  $promotion
      * @return \Illuminate\Http\Response
      */
-    public function show(Promotion $promotion)
+    public function show($id)
     {
-        //
+        $promotion = Promotion::find($id);
+        if($promotion){
+            return  response()->json([
+                "status" => "success",
+                "promotion" => new PromotionResource($promotion)
+            ]);
+        }
+
+        return response()->json([
+            'status' => 'fail',
+            "message" => "Khuyến mãi không tồn tại"
+        ]);    
     }
 
+    public function findByCode($code)
+    {
+        $promotion = Promotion::where('code', $code)->get();
+        if(isset($promotion[0])){
+            return  response()->json([
+                "status" => "success",
+                "promotion" => new PromotionResource($promotion[0])
+            ]);
+        }
+
+        return response()->json([
+            'status' => 'fail',
+            "message" => "Mã khuyến mãi không đúng"
+        ]); 
+    }
     /**
      * Show the form for editing the specified resource.
      *

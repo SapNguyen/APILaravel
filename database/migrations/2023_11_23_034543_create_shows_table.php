@@ -15,9 +15,11 @@ return new class extends Migration
     {
         Schema::create('shows', function (Blueprint $table) {
             $table->id('idshow');
-            $table->foreign('idphim')->references('idphim')->on('films');
+            $table->unsignedBigInteger('idphim');
             $table->date('date');
             $table->time('time');
+
+            $table->foreign('idphim')->references('idphim')->on('films');
         });
     }
 

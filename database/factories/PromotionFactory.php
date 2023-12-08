@@ -20,7 +20,13 @@ class PromotionFactory extends Factory
     public function definition()
     {
         return [
-            //
+            'code' => strtoupper(fake()->unique()->bothify('??????##')),
+            'title' => fake()->sentence(),
+            'description' => fake()->paragraph(),
+            'image' => fake()->imageUrl(),
+            'startDate' => fake()->dateTimeBetween('-1 month', '+1 month'),
+            'endDate' => fake()->dateTimeBetween('+2 days', '+2 months'),
+            'discount' => fake()->randomElement([30,40,50])
         ];
     }
 }

@@ -14,8 +14,14 @@ return new class extends Migration
     public function up()
     {
         Schema::create('promotions', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
+            $table->id('idkm');
+            $table->string('code');
+            $table->string('title');
+            $table->string('description');
+            $table->string('image');
+            $table->date('startDate');
+            $table->date('endDate');
+            $table->float('discount');
         });
     }
 
