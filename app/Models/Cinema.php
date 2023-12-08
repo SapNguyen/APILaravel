@@ -5,10 +5,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Film extends Model
+class Cinema extends Model
 {
     public $timestamps = false;
-    public $primaryKey = "idphim";
-
+    public $primaryKey = "idphong";
     use HasFactory;
 }

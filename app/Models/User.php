@@ -7,8 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class User extends Model
 {
-    protected $timestamps = false;
-    protected $primaryKey = "idtk";
+    public $timestamps = false;
+    public $primaryKey = "idtk";
     
     use HasFactory;
 }
