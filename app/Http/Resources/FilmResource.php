@@ -18,11 +18,12 @@ class FilmResource extends JsonResource
             "id" => $this->idphim,
             "name" => $this->name,
             "image" => $this->image,
-            "release" => $this->release,
-            "time" => $this->time,
-            "censor" => $this->censor,
-            "category" => $this->category,
-            "author" => $this->author,
+            "description" => $this->description,
+            "release_date" => $this->release,
+            "runtime" => $this->time,
+            "age_validation" => $this->censor,
+            "genre" => $this->category,
+            "director" => $this->author,
             "actor" => $this->actor,
             "language" => $this->language
         ];

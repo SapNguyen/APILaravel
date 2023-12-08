@@ -17,9 +17,10 @@ return new class extends Migration
             $table->id('idphim');
             $table->string('name');
             $table->string('image');
-            $table->date('release');
+            $table->string('description');
+            $table->date('release_date');
             $table->time('runtime');
-            $table->string('censor');
+            $table->string('age_validation');
             $table->string('genre');
             $table->string('director');
             $table->string('actor');
