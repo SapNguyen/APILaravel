@@ -124,13 +124,6 @@ class UserController extends Controller
     public function update(Request $request, $id)
     {
         // validate
-        $request->validate([
-            'name' => 'required',
-            'email' => 'required|email:filter',
-            'phone' => 'required',
-            'password' => 'required'
-        ]);
-
         $user = User::find($id);
         if(!isset($user)){
             return response()->json([
@@ -138,34 +131,26 @@ class UserController extends Controller
                 "message" => "id tài khoản không tồn tại"
             ]);
         }
-
-        // kiem tra email ton tai
-        if($request->email != $user->email){
-            $get_email = User::where('email', '=', $request->email) -> get();
-            if(isset($get_email[0])){
-                    return response()->json([
-                    'status' => 'fail',
-                    'message' => 'Email đã được sử dụng'
-                ]);
-            }
-        }
         
-        // kiem tra sdt ton tai
-        if($request->phone != $user->phone){
-            $get_phone = User::where('phone', '=', $request->phone)-> get();
-            if(isset($get_phone[0])){
-                return response()->json([
-                    'status' => 'fail',
-                    'message' => 'SĐT đã tồn tại, vui lòng chọn số khác'
-                ]);
-            }
-        }
-
         // cap nhat user
-        $user->email = $request->email;
-        $user->phone = $request->phone;
-        $user->name = $request->name;
-        $user->password = $request->password;
+        if(isset($request->phone)){
+            if($request->phone != $user->phone){
+                $check_phone = User::where('phone', '=', $request->phone)-> get();
+                if(isset($check_phone[0])){
+                    return response()->json([
+                        'status' => 'fail',
+                        'message' => 'SĐT đã tồn tại, vui lòng chọn số khác'
+                    ]);
+                }
+            }
+            $user->phone = $request->phone;
+        }
+        if(isset($request->name)){
+            $user->name = $request->name;
+        }
+        if(isset($request->password)){
+            $user->password = $request->password;
+        }
         $user->save();
 
         return response()->json([
