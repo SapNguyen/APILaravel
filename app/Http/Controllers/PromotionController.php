@@ -66,8 +66,14 @@ class PromotionController extends Controller
         ]);    
     }
 
-    public function findByCode($code)
+    public function findByCode(Request $request)
     {
+        $request->validate([
+            'code' => 'required'
+        ]);
+
+        $code = $request->code;
+
         $promotion = Promotion::where('code', $code)->get();
         if(isset($promotion[0])){
             return  response()->json([

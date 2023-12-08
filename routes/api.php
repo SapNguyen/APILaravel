@@ -15,7 +15,7 @@ Route::group(['prefix' => 'users'], function () {
     Route::get('/', [UserController::class, 'index']);
 });
 Route::group(['prefix' => 'promotions'], function () {
-    Route::get('/findByCode/{code}', [PromotionController::class, 'findByCode']);
+    Route::get('/findByCode', [PromotionController::class, 'findByCode']);
     Route::get('/{id}', [PromotionController::class, 'show']);
     Route::get('/', [PromotionController::class, 'index']);
 });
