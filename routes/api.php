@@ -1,12 +1,13 @@
 <?php
 
+use App\Http\Controllers\CinemaController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Resources\UserResource;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\PromotionController;
 use App\Http\Controllers\FilmController;
-
+use App\Http\Controllers\SeatController;
 
 Route::group(['prefix' => 'users'], function () {
     Route::post('/{id}', [UserController::class, 'update']);
@@ -23,4 +24,13 @@ Route::group(['prefix' => 'promotions'], function () {
 Route::group(['prefix' => 'films'], function () {
     Route::get('/{id}', [FilmController::class, 'show']);
     Route::get('/', [FilmController::class, 'index']);
+});
+
+Route::group(['prefix' => 'cinema'], function () {
+    Route::get('/{id}', [CinemaController::class, 'show']);
+});
+
+Route::group(['prefix' => 'seat'], function () {
+    Route::get('/{id}', [SeatController::class, 'show']);
+    Route::post('/{id}', [SeatController::class, 'update']);
 });
