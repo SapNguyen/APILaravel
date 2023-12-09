@@ -6,6 +6,7 @@ use App\Models\Cinema;
 use App\Http\Requests\StoreCinemaRequest;
 use App\Http\Requests\UpdateCinemaRequest;
 use App\Http\Resources\CinemaResource;
+use Illuminate\Http\Request;
 
 class CinemaController extends Controller
 {
@@ -46,10 +47,14 @@ class CinemaController extends Controller
      * @param  \App\Models\Cinema  $cinema
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Request $request, $id)
     {
+        $request->validate([
+            'id_show' => 'required'
+        ]);
         $cinema = Cinema::find($id);
         if($cinema){
+            $cinema->id_show = $request->id_show;
             return  response()->json([
                 "status" => "success",
                 "cinema" => new CinemaResource($cinema)

@@ -18,8 +18,6 @@ return new class extends Migration
             $table->unsignedBigInteger('idphong');
             $table->string('row');
             $table->unsignedSmallInteger('column');
-            $table->boolean('isSelected');
-            $table->boolean('isBooked');
 
             $table->foreign('idphong')->references('idphong')->on('cinemas');
         });

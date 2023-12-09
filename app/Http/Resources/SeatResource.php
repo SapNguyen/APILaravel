@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Models\SeatStatus;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class SeatResource extends JsonResource
@@ -12,13 +13,30 @@ class SeatResource extends JsonResource
      * @param  \Illuminate\Http\Request  $request
      * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
      */
+    
     public function toArray($request)
     {
+        $isSelected = 0;
+        $isBooked = 0;
+
+        if(!isset($this->id_show)){
+            return [
+                "message" => "dismiss parameter"
+            ];
+        }
+        $seatStatus = SeatStatus::where('idghe', $this->idghe)
+            ->where('idshow', $this->idshow)
+            ->get();
+        
+        if(count($seatStatus) > 0){
+            $isSelected = $seatStatus->isSelected;
+            $isBooked = $seatStatus->isBooked;
+        }
         return [
             "id" => $this->idghe,
             "name" => $this->row . $this->column,
-            "isSelected" => $this->isSelected,
-            "isBooked" => $this->isBooked
+            "isSelected" => $isSelected,
+            "isBooked" => $isBooked
         ];
     }
 }
