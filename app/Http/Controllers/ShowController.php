@@ -65,7 +65,7 @@ class ShowController extends Controller
                 ->where('idphim', $film->idphim)
                 ->orderBy('start_time')
                 ->get();
-            $film->shows = $shows;
+            $film->shows = new ShowCollection($shows);
             $films[$i] = $film;
         }
         if (count($films) > 0){
@@ -172,7 +172,7 @@ class ShowController extends Controller
             strval(explode(" ",$date)[0]).' 00:00:00',
             strval(explode(" ",$date)[0]).' 23:59:59'
         ];
-        
+
         $filmIds = Show::whereBetween('start_time', $rangeDate )
             ->pluck('idphim')->unique()->values();
         if(count($filmIds) == 0){
@@ -188,7 +188,7 @@ class ShowController extends Controller
                 ->where('idphim', $film->idphim)
                 ->orderBy('start_time')
                 ->get();
-            $film->shows = $shows;
+            $film->shows = new ShowCollection($shows);
             $films[$i] = $film;
         }
         if (count($films) > 0){

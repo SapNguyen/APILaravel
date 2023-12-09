@@ -22,13 +22,14 @@ class ShowResource extends JsonResource
         $start_time = DateTime::createFromFormat('Y-m-d H:i:s', $this->start_time);
         $format = 'd/m H:i';
         $parts = explode(' ', $start_time->format($format));
-
+        $dayOfWeek = date('l', strtotime($this->start_time));
         return [
             'id' => $this->idshow,
             'cinema' => $cinema[0],  
             // 'film' => new FilmResource($film[0]),  
             'date' =>  $parts[0],
-            'time' => $parts[1]
+            'time' => $parts[1],
+            'day_of_week' => $dayOfWeek
         ];
     }
 }
