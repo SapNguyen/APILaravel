@@ -8,6 +8,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\PromotionController;
 use App\Http\Controllers\FilmController;
 use App\Http\Controllers\SeatController;
+use App\Http\Controllers\ShowController;
 
 Route::group(['prefix' => 'users'], function () {
     Route::post('/{id}', [UserController::class, 'update']);
@@ -33,4 +34,9 @@ Route::group(['prefix' => 'cinema'], function () {
 Route::group(['prefix' => 'seat'], function () {
     Route::get('/{id}', [SeatController::class, 'show']);
     Route::post('/{id}', [SeatController::class, 'update']);
+});
+
+Route::group(['prefix' => 'show'], function () {
+    Route::get('/', [ShowController::class, 'index']);
+    Route::get('/findByDate', [ShowController::class, 'findByDate']);
 });

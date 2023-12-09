@@ -9,6 +9,5 @@ class Show extends Model
 {
     public $timestamps = false;
     public $primaryKey = "idshow";
-
     use HasFactory;
 }

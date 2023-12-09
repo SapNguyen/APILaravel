@@ -2,6 +2,8 @@
 
 namespace Database\Factories;
 
+use App\Models\Cinema;
+use App\Models\Film;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -16,8 +18,12 @@ class ShowFactory extends Factory
      */
     public function definition()
     {
+        $idphongs = Cinema::pluck('idphong')->toArray();
+        $idphims = Film::pluck('idphim')->toArray();
         return [
-            //
+            'start_time' => fake()->unique()->dateTimeBetween('+1 day', '+3 week'),
+            'idphim' => fake()->randomElement($idphims),
+            'idphong' => fake()->randomElement($idphongs)
         ];
     }
 }

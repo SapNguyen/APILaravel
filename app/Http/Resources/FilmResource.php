@@ -2,6 +2,8 @@
 
 namespace App\Http\Resources;
 
+use App\Models\Show;
+use Carbon\Carbon;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class FilmResource extends JsonResource
@@ -25,7 +27,8 @@ class FilmResource extends JsonResource
             "genre" => $this->genre,
             "director" => $this->director,
             "actor" => $this->actor,
-            "language" => $this->language
+            "language" => $this->language,
+            "shows" => $this->whenNotNull($this->shows)
         ];
     }
 }

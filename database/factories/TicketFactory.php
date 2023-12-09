@@ -23,7 +23,7 @@ class TicketFactory extends Factory
             'idshow' => '1',
             'idtk' => '1',
             'date_create' => fake()->date(),
-            'seat' => Str::rand(3),
+            // 'seat' => Str::rand(3),
             'cost' => fake()->digit(),
         ];
     }
