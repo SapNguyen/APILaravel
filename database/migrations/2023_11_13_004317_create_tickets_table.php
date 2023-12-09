@@ -15,11 +15,14 @@ return new class extends Migration
     {
         Schema::create('tickets', function (Blueprint $table) {
             $table->id('idve');
-            // $table->foreign('idshow')->references('idshow')->on('shows');
-            // $table->foreign('idtk')->references('idtk')->on('users');
-            // $table->date('date_create');
-            // $table->string('seat');
-            // $table->string('cost');
+            $table->float('cost');
+            $table->unsignedBigInteger('idghe');
+            $table->unsignedBigInteger('idshow');
+            $table->unsignedBigInteger('idtk');
+
+            $table->foreign('idshow')->references('idshow')->on('shows');
+            $table->foreign('idtk')->references('idtk')->on('users');
+            $table->foreign('idghe')->references('idghe')->on('seats');
         });
     }
 
