@@ -6,6 +6,7 @@ use App\Models\Seat;
 use App\Http\Requests\StoreSeatRequest;
 use App\Http\Requests\UpdateSeatRequest;
 use App\Http\Resources\SeatResource;
+use App\Models\SeatStatus;
 use Illuminate\Http\Request;
 
 class SeatController extends Controller
@@ -47,10 +48,14 @@ class SeatController extends Controller
      * @param  \App\Models\Seat  $seat
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Request $request, $id)
     {
+        $request->validate([
+            'id_show' => 'required'
+        ]);
         $seat = Seat::find($id);
         if($seat){
+            $seat->id_show = $request->id_show;
             return  response()->json([
                 "status" => "success",
                 "seat" => new SeatResource($seat)
@@ -90,10 +95,19 @@ class SeatController extends Controller
                 "message" => "Ghế không tồn tại"
             ]);
         }
+        $seatStatus = SeatStatus::where('idghe', $id)
+                ->where('idshow', $request->id_show)
+                ->get();
+        if(count($seatStatus) > 0){
+            $seatStatus = $seatStatus[0];
+        }else{
+            $seatStatus = new SeatStatus();
+        }
+        
+        $seatStatus->isSelected = $request->isSelected;
+        $seatStatus->save();
 
-        $seat->isSelected = $request->isSelected;
-        $seat->save();
-
+        $seat->id_show = $request->id_show;
         return response()->json([
             'status' => 'success',
             "message" => "Cập nhật thành công",

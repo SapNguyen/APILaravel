@@ -15,13 +15,16 @@ class CinemaResource extends JsonResource
      */
     public function toArray($request)
     {
-        $seat = Seat::where('idphong',$this->idphong)->get();
+        $seats = Seat::where('idphong',$this->idphong)->get();
+        foreach($seats as $seat){
+            $seat->id_show = $this->id_show;
+        }
         return [
             "id" => $this->idphong,
             "name" => $this->name,
             "amount_of_seat" => $this->amount_of_seat,
             "seat_per_row" => $this->seat_per_row,
-            "seats" => new SeatCollection($seat)
+            "seats" => new SeatCollection($seats)
         ];
     }
 }

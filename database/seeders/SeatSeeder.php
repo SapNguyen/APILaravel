@@ -29,9 +29,7 @@ class SeatSeeder extends Seeder
                     $seat = Seat::make([
                         'idphong' => $cinema->idphong,
                         'row' => $row_name,
-                        'column' => $j,
-                        'isSelected' => 0,
-                        'isBooked' => rand(0, 1),
+                        'column' => $j
                     ]);
                     $seat->save();
                     $count++;
