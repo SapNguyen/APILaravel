@@ -17,7 +17,7 @@ class CinemaResource extends JsonResource
     {
         $seats = Seat::where('idphong',$this->idphong)->get();
         foreach($seats as $seat){
-            $seat->id_show = $this->id_show;
+            $seat->showId = $this->showId;
         }
         return [
             "id" => $this->idphong,

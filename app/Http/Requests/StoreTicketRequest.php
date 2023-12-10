@@ -24,7 +24,10 @@ class StoreTicketRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'idghe' => "required",
+            'idshow' => "required",
+            'idtk' => "required",
+            'cost' => "required",
         ];
     }
 }

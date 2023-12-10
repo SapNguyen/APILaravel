@@ -25,7 +25,7 @@ class UpdateSeatRequest extends FormRequest
     {
         return [
             'isSelected' => 'required',
-            'id_show' => 'required'
+            'showId' => 'required'
         ];
     }
 }

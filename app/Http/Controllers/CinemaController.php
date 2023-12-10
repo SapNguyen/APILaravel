@@ -50,11 +50,11 @@ class CinemaController extends Controller
     public function show(Request $request, $id)
     {
         $request->validate([
-            'id_show' => 'required'
+            'showId' => 'required'
         ]);
         $cinema = Cinema::find($id);
         if($cinema){
-            $cinema->id_show = $request->id_show;
+            $cinema->showId = $request->showId;
             return  response()->json([
                 "status" => "success",
                 "cinema" => new CinemaResource($cinema)

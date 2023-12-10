@@ -51,11 +51,11 @@ class SeatController extends Controller
     public function show(Request $request, $id)
     {
         $request->validate([
-            'id_show' => 'required'
+            'showId' => 'required'
         ]);
         $seat = Seat::find($id);
         if($seat){
-            $seat->id_show = $request->id_show;
+            $seat->showId = $request->showId;
             return  response()->json([
                 "status" => "success",
                 "seat" => new SeatResource($seat)
@@ -96,7 +96,7 @@ class SeatController extends Controller
             ]);
         }
         $seatStatus = SeatStatus::where('idghe', $id)
-                ->where('idshow', $request->id_show)
+                ->where('idshow', $request->showId)
                 ->get();
         if(count($seatStatus) > 0){
             $seatStatus = $seatStatus[0];
@@ -105,9 +105,12 @@ class SeatController extends Controller
         }
         
         $seatStatus->isSelected = $request->isSelected;
+        $seatStatus->idshow = $request->showId;
+        $seatStatus->idghe = $id;
+        $seatStatus->isBooked = 0;
         $seatStatus->save();
 
-        $seat->id_show = $request->id_show;
+        $seat->showId = $request->showId;
         return response()->json([
             'status' => 'success',
             "message" => "Cập nhật thành công",

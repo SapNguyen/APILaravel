@@ -2,8 +2,12 @@
 
 namespace Database\Factories;
 
+use App\Models\Seat;
+use App\Models\SeatStatus;
+use App\Models\Show;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use App\Models\Ticket;
+use App\Models\User;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Ticket>
@@ -19,12 +23,33 @@ class TicketFactory extends Factory
 
     public function definition()
     {
+        $seats = Seat::all();
+        $shows = Show::all();
+        $users = User::all();
+        $valid = false;
+        $idghe = null;
+        $idshow = null;
+        while (!$valid) {
+            $idghe = $seats->random()->idghe;
+            $idshow = $shows->random()->idshow;
+            $ticket = Ticket::where('idghe', $idghe)
+                ->where('idshow', $idshow)
+                ->get();
+            if(count($ticket) == 0){
+                $valid = true;
+                $seatStatus = new SeatStatus();
+                $seatStatus->isBooked = 1;
+                $seatStatus->isSelected = 0;
+                $seatStatus->idshow = $idshow;
+                $seatStatus->idghe = $idghe;
+                $seatStatus->save();
+            }
+        }
         return [
-            'idshow' => '1',
-            'idtk' => '1',
-            'date_create' => fake()->date(),
-            // 'seat' => Str::rand(3),
-            'cost' => fake()->digit(),
+            'idghe' => $idghe,
+            'idshow' => $idshow,
+            'idtk' => $users->random()->idtk,
+            'cost' => fake()->randomFloat(0, 100000, 200000)
         ];
     }
 }

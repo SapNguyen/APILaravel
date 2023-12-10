@@ -19,18 +19,14 @@ class SeatResource extends JsonResource
         $isSelected = 0;
         $isBooked = 0;
 
-        if(!isset($this->id_show)){
-            return [
-                "message" => "dismiss parameter"
-            ];
-        }
+        if(!isset($this->showId)) return;
         $seatStatus = SeatStatus::where('idghe', $this->idghe)
-            ->where('idshow', $this->idshow)
+            ->where('idshow', $this->showId)
             ->get();
         
         if(count($seatStatus) > 0){
-            $isSelected = $seatStatus->isSelected;
-            $isBooked = $seatStatus->isBooked;
+            $isSelected = $seatStatus[0]->isSelected;
+            $isBooked = $seatStatus[0]->isBooked;
         }
         return [
             "id" => $this->idghe,

@@ -5,7 +5,7 @@ namespace Database\Seeders;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
-class TicketSeeder extends Seeder
+class UserSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -14,6 +14,6 @@ class TicketSeeder extends Seeder
      */
     public function run()
     {
-        \App\Models\Ticket::factory(100)->create();
+        \App\Models\User::factory(10)->create();
     }
 }

@@ -9,6 +9,7 @@ use App\Http\Controllers\PromotionController;
 use App\Http\Controllers\FilmController;
 use App\Http\Controllers\SeatController;
 use App\Http\Controllers\ShowController;
+use App\Http\Controllers\TicketController;
 
 Route::group(['prefix' => 'users'], function () {
     Route::post('/{id}', [UserController::class, 'update']);
@@ -39,4 +40,10 @@ Route::group(['prefix' => 'seat'], function () {
 Route::group(['prefix' => 'show'], function () {
     Route::get('/', [ShowController::class, 'index']);
     Route::get('/findByDate', [ShowController::class, 'findByDate']);
+});
+
+Route::group(['prefix' => 'tickets'], function () {
+    Route::get('/{id}', [TicketController::class, 'show']);
+    Route::post('/', [TicketController::class, 'store']);
+    Route::get('/', [TicketController::class, 'index']);
 });
