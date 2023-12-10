@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('name');
             $table->unsignedSmallInteger('amount_of_seat');
             $table->unsignedSmallInteger('seat_per_row');
+            $table->boolean('deleted')->default(0);
         });
     }
 

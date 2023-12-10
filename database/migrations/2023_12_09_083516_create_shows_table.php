@@ -18,6 +18,7 @@ return new class extends Migration
             $table->unsignedBigInteger('idphong');
             $table->unsignedBigInteger('idphim');
             $table->dateTime('start_time');
+            $table->boolean('deleted')->default(0);
 
             $table->foreign('idphong')->references('idphong')->on('cinemas');
             $table->foreign('idphim')->references('idphim')->on('films');

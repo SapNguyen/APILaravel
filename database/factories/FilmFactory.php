@@ -30,6 +30,7 @@ class FilmFactory extends Factory
             'director' => fake()->name(),
             'actor' => fake()->name(),
             'language' => fake()->randomElement(["Tiếng Anh","Tiếng Việt"]),
+            'deleted' => 0
         ];
     }
 }

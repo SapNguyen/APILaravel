@@ -19,7 +19,7 @@ class PromotionController extends Controller
      */
     public function index()
     {
-        $promotions = Promotion::all();
+        $promotions = Promotion::where('deleted',0)->get();
         return new PromotionCollection($promotions);
     }
 
@@ -52,11 +52,12 @@ class PromotionController extends Controller
      */
     public function show($id)
     {
-        $promotion = Promotion::find($id);
-        if($promotion){
+        $promotion = Promotion::where('deleted',0)
+            ->where('idkm', $id)->get();
+        if(!isset($promotion[0])){
             return  response()->json([
                 "status" => "success",
-                "promotion" => new PromotionResource($promotion)
+                "promotion" => new PromotionResource($promotion[0])
             ]);
         }
 
@@ -74,7 +75,8 @@ class PromotionController extends Controller
 
         $code = $request->code;
 
-        $promotion = Promotion::where('code', $code)->get();
+        $promotion = Promotion::where('deleted',0)
+            ->where('code', $code)->get();
         if(isset($promotion[0])){
             return  response()->json([
                 "status" => "success",

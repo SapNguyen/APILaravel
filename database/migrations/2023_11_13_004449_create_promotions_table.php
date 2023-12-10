@@ -22,6 +22,7 @@ return new class extends Migration
             $table->date('startDate');
             $table->date('endDate');
             $table->float('discount');
+            $table->boolean('deleted')->default(0);
         });
     }
 

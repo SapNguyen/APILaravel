@@ -17,7 +17,7 @@ class UserController extends Controller
      */
     public function index()
     {
-        $users = User::all();
+        $users = User::where('deleted',0)->get();
         return new UserCollection($users);
 
     }
@@ -49,7 +49,9 @@ class UserController extends Controller
         ]);
 
         // kiem tra email ton tai
-        $get_email = User::where('email', '=', $request->email) -> get();
+        $get_email = User::where('email', '=', $request->email) 
+            ->where('deleted',0)
+            -> get();
         if(isset($get_email[0]))
             return response()->json([
                 'status' => 'fail',
@@ -57,7 +59,8 @@ class UserController extends Controller
             ]);
         
         // kiem tra sdt ton tai
-        $get_phone = User::where('phone', '=', $request->phone)-> get();
+        $get_phone = User::where('deleted',0)
+            ->where('phone', '=', $request->phone)-> get();
         if(isset($get_phone[0]))
             return response()->json([
                 'status' => 'fail',
@@ -72,7 +75,8 @@ class UserController extends Controller
         $create->password = $request->password;
         $create->save();
 
-        $user = User::where('email', '=', $request->email)->get();
+        $user = User::where('deleted',0)
+            ->where('email', '=', $request->email)->get();
 
         return response()->json([
             'status' => 'success',
@@ -89,17 +93,19 @@ class UserController extends Controller
      */
     public function show($id)
     {
-        $user = User::find($id);
-        if($user){
+        $user = User::where('idtk',$id)
+            ->where('deleted',0)->get();
+
+        if(count($user) > 0){
             return  response()->json([
                 "status" => "success",
-                "user" => new UserResource($user)
+                "user" => new UserResource($user[0])
             ]);
         }
 
         return response()->json([
             'status' => 'fail',
-            "message" => "id tài khoản không tồn tại"
+            "message" => "Tài khoản không tồn tại"
         ]);     
     }
 
@@ -123,19 +129,22 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
-        // validate
-        $user = User::find($id);
-        if(!isset($user)){
+        $user = User::where('idtk',$id)
+            ->where('deleted',0)->get();
+            
+        if(count($user) == 0){
             return response()->json([
                 'status' => 'fail',
-                "message" => "id tài khoản không tồn tại"
+                "message" => "Tài khoản không tồn tại"
             ]);
         }
-        
+        $user = $user[0];
         // cap nhat user
         if(isset($request->phone)){
             if($request->phone != $user->phone){
-                $check_phone = User::where('phone', '=', $request->phone)-> get();
+                $check_phone = User::where('deleted',0)
+                    ->where('phone', '=', $request->phone)
+                    -> get();
                 if(isset($check_phone[0])){
                     return response()->json([
                         'status' => 'fail',
@@ -169,6 +178,20 @@ class UserController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $user = User::where('idtk',$id)
+            ->where('deleted',0)->get();
+
+        if(count($user) > 0){
+            $user[0]->deleted = 1;
+            $user[0]->save();
+            return response()->json([
+                'status' => 'success',
+                "message" => "Đã xóa tài khoản"
+            ]);
+        }
+        return response()->json([
+            'status' => 'fail',
+            "message" => "Tài khoản không tồn tại"
+        ]);
     }
 }

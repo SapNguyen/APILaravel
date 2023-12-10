@@ -49,7 +49,8 @@ class TicketFactory extends Factory
             'idghe' => $idghe,
             'idshow' => $idshow,
             'idtk' => $users->random()->idtk,
-            'cost' => fake()->randomFloat(0, 100000, 200000)
+            'cost' => fake()->randomFloat(0, 100000, 200000),
+            'deleted' => 0
         ];
     }
 }

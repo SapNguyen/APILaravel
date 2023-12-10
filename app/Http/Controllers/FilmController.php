@@ -21,7 +21,7 @@ class FilmController extends Controller
      */
     public function index()
     {
-        $films = Film::all();
+        $films = Film::where('deleted',0)->get();
         return new FilmCollection($films);
     }
 
@@ -54,17 +54,19 @@ class FilmController extends Controller
      */
     public function show($id)
     {
-        $film = Film::find($id);
-        if(!$film){
+        $film = Film::where('deleted',0)
+            ->where('idphim', $id);
+        if(!isset($film[0])){
             return response()->json([
                 'status' => 'fail',
                 "message" => "Phim không tồn tại"
             ]);
         }
-
+        $film = $film[0];
         $currentDate = Carbon::now()->toDateString();  
         $daysLater = Carbon::now()->addDays(4)->toDateString();
-        $shows = Show::orderBy('start_time')
+        $shows = Show::where('deleted',0)
+                ->orderBy('start_time')
                 ->where('idphim', $film->idphim)
                 ->whereBetween('start_time', [$currentDate, $daysLater])
                 ->get();

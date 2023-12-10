@@ -23,7 +23,8 @@ class ShowFactory extends Factory
         return [
             'start_time' => fake()->unique()->dateTimeBetween('+1 day', '+3 week'),
             'idphim' => fake()->randomElement($idphims),
-            'idphong' => fake()->randomElement($idphongs)
+            'idphong' => fake()->randomElement($idphongs),
+            'deleted' => 0
         ];
     }
 }

@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id('idphim');
             $table->string('name');
             $table->string('image');
-            $table->string('description');
+            $table->text('description');
             $table->date('release_date');
             $table->time('runtime');
             $table->string('age_validation');
@@ -25,6 +25,7 @@ return new class extends Migration
             $table->string('director');
             $table->string('actor');
             $table->string('language');
+            $table->boolean('deleted')->default(0);
         });
     }
 

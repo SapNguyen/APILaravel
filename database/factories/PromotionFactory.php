@@ -26,7 +26,8 @@ class PromotionFactory extends Factory
             'image' => fake()->imageUrl(),
             'startDate' => fake()->dateTimeBetween('-1 month', '+1 month'),
             'endDate' => fake()->dateTimeBetween('+2 days', '+2 months'),
-            'discount' => fake()->randomElement([30,40,50])
+            'discount' => fake()->randomElement([30,40,50]),
+            'deleted' => 0
         ];
     }
 }

@@ -52,12 +52,13 @@ class CinemaController extends Controller
         $request->validate([
             'showId' => 'required'
         ]);
-        $cinema = Cinema::find($id);
-        if($cinema){
-            $cinema->showId = $request->showId;
+        $cinema = Cinema::where('deleted',0)
+            ->where('idphong',$id)->get();
+        if(count($cinema) > 0){
+            $cinema[0]->showId = $request->showId;
             return  response()->json([
                 "status" => "success",
-                "cinema" => new CinemaResource($cinema)
+                "cinema" => new CinemaResource($cinema[0])
             ]);
         }
 

@@ -16,6 +16,7 @@ Route::group(['prefix' => 'users'], function () {
     Route::get('/{id}', [UserController::class, 'show']);
     Route::post('/', [UserController::class, 'store']);
     Route::get('/', [UserController::class, 'index']);
+    Route::get('/deleteUser/{id}', [UserController::class, 'destroy']);
 });
 Route::group(['prefix' => 'promotions'], function () {
     Route::get('/findByCode', [PromotionController::class, 'findByCode']);

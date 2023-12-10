@@ -53,8 +53,10 @@ class SeatController extends Controller
         $request->validate([
             'showId' => 'required'
         ]);
-        $seat = Seat::find($id);
-        if($seat){
+        $seat = Seat::where('deleted',0)
+            ->where('idghe',$id)->get();
+        if(!isset($seat[0])){
+            $seat = $seat[0];
             $seat->showId = $request->showId;
             return  response()->json([
                 "status" => "success",
@@ -88,8 +90,9 @@ class SeatController extends Controller
      */
     public function update(UpdateSeatRequest $request, $id)
     {
-        $seat = Seat::find($id);
-        if(!isset($seat)){
+        $seat = Seat::where('deleted',0)
+            ->where('idghe',$id)->get();
+        if(!isset($seat[0])){
             return response()->json([
                 'status' => 'fail',
                 "message" => "Ghế không tồn tại"
@@ -98,17 +101,17 @@ class SeatController extends Controller
         $seatStatus = SeatStatus::where('idghe', $id)
                 ->where('idshow', $request->showId)
                 ->get();
-        if(count($seatStatus) > 0){
-            $seatStatus = $seatStatus[0];
-        }else{
-            $seatStatus = new SeatStatus();
+        if(count($seatStatus) > 0 && $request->isSelected == 0){
+            $seatStatus[0]->delete();
         }
-        
-        $seatStatus->isSelected = $request->isSelected;
-        $seatStatus->idshow = $request->showId;
-        $seatStatus->idghe = $id;
-        $seatStatus->isBooked = 0;
-        $seatStatus->save();
+        elseif(count($seatStatus) == 0 && $request->isSelected == 1){
+            $seatStatus = new SeatStatus();
+            $seatStatus->isSelected = $request->isSelected;
+            $seatStatus->idshow = $request->showId;
+            $seatStatus->idghe = $id;
+            $seatStatus->isBooked = 0;
+            $seatStatus->save();
+        }
 
         $seat->showId = $request->showId;
         return response()->json([

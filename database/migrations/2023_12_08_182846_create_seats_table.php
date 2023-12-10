@@ -18,6 +18,7 @@ return new class extends Migration
             $table->unsignedBigInteger('idphong');
             $table->string('row');
             $table->unsignedSmallInteger('column');
+            $table->boolean('deleted')->default(0);
 
             $table->foreign('idphong')->references('idphong')->on('cinemas');
         });

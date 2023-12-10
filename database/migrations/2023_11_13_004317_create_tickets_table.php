@@ -19,6 +19,7 @@ return new class extends Migration
             $table->unsignedBigInteger('idghe');
             $table->unsignedBigInteger('idshow');
             $table->unsignedBigInteger('idtk');
+            $table->boolean('deleted')->default(0);
 
             $table->foreign('idshow')->references('idshow')->on('shows');
             $table->foreign('idtk')->references('idtk')->on('users');

@@ -29,7 +29,8 @@ class SeatSeeder extends Seeder
                     $seat = Seat::make([
                         'idphong' => $cinema->idphong,
                         'row' => $row_name,
-                        'column' => $j
+                        'column' => $j,
+                        'deleted' => 0
                     ]);
                     $seat->save();
                     $count++;

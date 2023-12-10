@@ -20,6 +20,7 @@ class CinemaFactory extends Factory
             'name' => fake()->unique()->name(),
             'amount_of_seat' => fake()->numberBetween(50, 80),
             'seat_per_row' => fake()->numberBetween(8,15),
+            'deleted' => 0
         ];
     }
 }
