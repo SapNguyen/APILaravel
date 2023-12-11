@@ -21,10 +21,69 @@ class FilmController extends Controller
      */
     public function index()
     {
-        $films = Film::where('deleted',0)->get();
+        $films = Film::where('deleted',"0")->get();
         return new FilmCollection($films);
     }
-
+    public function findFilmShowing()
+    {
+        $today = Carbon::now()->addHours(7)->format("Y-m-d H:i:s");
+        $nextDays = Carbon::now()->addHours(7)
+            ->addDays(4)->format("Y-m-d H:i:s");
+        $filmDBs = Film::where('deleted','0')
+            ->get();
+        if(!isset($filmDBs[0])) return [];
+        $films = [];
+        foreach ($filmDBs as $film) {
+            $film_show_time = [
+                $film->release_date." 00:00:00",
+                $film->end_date." 23:59:59"
+            ];
+            $shows = Show::where('deleted','0')
+                ->whereBetween('start_time',[$today, $nextDays])
+                ->whereBetween('start_time', $film_show_time)
+                ->get();
+            if(!isset($shows[0])) continue;
+            array_push($films, $film);
+        }
+        
+        return new FilmCollection($films);
+    }
+    public function findFilmUpComing()
+    {
+        $today = Carbon::now()->addHours(7)
+            ->addDays(1)->format("Y-m-d");
+        $lastDayOfMonth = Carbon::now()
+            ->endOfMonth()->format("Y-m-d");
+        $films = Film::where('deleted',"0")
+            ->whereBetween('release_date',[$today, $lastDayOfMonth])
+            ->get();
+        return new FilmCollection($films);
+    }
+    public function findFilmEarlyShow()
+    {
+        $today =  Carbon::now()->addHours(7)->format("Y-m-d H:i:s");
+        $nextFourDays = Carbon::now()->addHours(7)
+            ->addDays(2)->format("Y-m-d H:i:s");
+        
+        $filmDBs = Film::where('deleted','0')
+            ->get();
+        if(!isset($filmDBs[0])) return [];
+        $films = [];
+        foreach ($filmDBs as $film) {
+            $early_time = [
+                Carbon::parse($film->release_date)->subDays(2)->setTime(00,00,00)->format("Y-m-d H:i:s"),
+                Carbon::parse($film->release_date)->subDays(1)->setTime(23,59,59)->format("Y-m-d H:i:s")
+            ];
+            $shows = Show::where('deleted','0')
+                ->whereBetween('start_time',[$today, $nextFourDays])
+                ->whereBetween('start_time', $early_time)
+                ->get();
+                
+            if(!isset($shows[0])) continue;
+            array_push($films, $film);
+        }
+        return new FilmCollection($films);
+    }
     /**
      * Show the form for creating a new resource.
      *
@@ -54,8 +113,9 @@ class FilmController extends Controller
      */
     public function show($id)
     {
-        $film = Film::where('deleted',0)
-            ->where('idphim', $id);
+        $film = Film::where('deleted',"0")
+            ->where('idphim', $id)
+            ->get();
         if(!isset($film[0])){
             return response()->json([
                 'status' => 'fail',
@@ -63,9 +123,10 @@ class FilmController extends Controller
             ]);
         }
         $film = $film[0];
-        $currentDate = Carbon::now()->toDateString();  
-        $daysLater = Carbon::now()->addDays(4)->toDateString();
-        $shows = Show::where('deleted',0)
+        $currentDate = Carbon::now()->addHours(7)->toDateString();  
+        $daysLater = Carbon::now()->addHours(7)
+            ->addDays(4)->toDateString();
+        $shows = Show::where('deleted',"0")
                 ->orderBy('start_time')
                 ->where('idphim', $film->idphim)
                 ->whereBetween('start_time', [$currentDate, $daysLater])

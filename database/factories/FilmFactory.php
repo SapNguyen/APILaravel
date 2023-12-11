@@ -22,9 +22,10 @@ class FilmFactory extends Factory
         return [
             'name' => fake()->unique()->name(),
             'image' => fake()->imageUrl(),
-            'release_date' => fake()->date(),
+            'release_date' => fake()->dateTimeBetween('-10 day', '+20 day'),
+            'end_date' => fake()->dateTimeBetween('+1 month', '+2 month'),
             'description' => fake()->paragraph(),
-            'runtime' => fake()->time(),
+            'runtime' => fake()->numberBetween(60, 180),
             'age_validation' => fake()->randomElement(["P","16+","18+","13+"]),
             'genre' => fake()->randomElement(['Hành động', 'Phiêu lưu', "Hoạt hình","Trinh thám"]),
             'director' => fake()->name(),

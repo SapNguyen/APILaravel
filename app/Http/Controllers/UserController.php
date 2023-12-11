@@ -17,7 +17,7 @@ class UserController extends Controller
      */
     public function index()
     {
-        $users = User::where('deleted',0)->get();
+        $users = User::where('deleted',"0")->get();
         return new UserCollection($users);
 
     }
@@ -50,7 +50,7 @@ class UserController extends Controller
 
         // kiem tra email ton tai
         $get_email = User::where('email', '=', $request->email) 
-            ->where('deleted',0)
+            ->where('deleted',"0")
             -> get();
         if(isset($get_email[0]))
             return response()->json([
@@ -59,7 +59,7 @@ class UserController extends Controller
             ]);
         
         // kiem tra sdt ton tai
-        $get_phone = User::where('deleted',0)
+        $get_phone = User::where('deleted',"0")
             ->where('phone', '=', $request->phone)-> get();
         if(isset($get_phone[0]))
             return response()->json([
@@ -75,7 +75,7 @@ class UserController extends Controller
         $create->password = $request->password;
         $create->save();
 
-        $user = User::where('deleted',0)
+        $user = User::where('deleted',"0")
             ->where('email', '=', $request->email)->get();
 
         return response()->json([
@@ -94,7 +94,7 @@ class UserController extends Controller
     public function show($id)
     {
         $user = User::where('idtk',$id)
-            ->where('deleted',0)->get();
+            ->where('deleted',"0")->get();
 
         if(count($user) > 0){
             return  response()->json([
@@ -130,7 +130,7 @@ class UserController extends Controller
     public function update(Request $request, $id)
     {
         $user = User::where('idtk',$id)
-            ->where('deleted',0)->get();
+            ->where('deleted',"0")->get();
             
         if(count($user) == 0){
             return response()->json([
@@ -142,7 +142,7 @@ class UserController extends Controller
         // cap nhat user
         if(isset($request->phone)){
             if($request->phone != $user->phone){
-                $check_phone = User::where('deleted',0)
+                $check_phone = User::where('deleted',"0")
                     ->where('phone', '=', $request->phone)
                     -> get();
                 if(isset($check_phone[0])){
@@ -179,7 +179,7 @@ class UserController extends Controller
     public function destroy($id)
     {
         $user = User::where('idtk',$id)
-            ->where('deleted',0)->get();
+            ->where('deleted',"0")->get();
 
         if(count($user) > 0){
             $user[0]->deleted = 1;

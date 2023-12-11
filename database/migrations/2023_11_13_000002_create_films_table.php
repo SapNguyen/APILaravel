@@ -19,7 +19,8 @@ return new class extends Migration
             $table->string('image');
             $table->text('description');
             $table->date('release_date');
-            $table->time('runtime');
+            $table->date('end_date');
+            $table->integer('runtime');
             $table->string('age_validation');
             $table->string('genre');
             $table->string('director');

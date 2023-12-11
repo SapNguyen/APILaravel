@@ -43,13 +43,13 @@ class ShowController extends Controller
         //     }
         // }
 
-        $nextDays = Carbon::now()->addDays($this->range_date);
+        $nextDays = Carbon::now()->addHours(7)->addDays($this->range_date);
         $rangeDate = [
-            strval(Carbon::now()),
+            strval(Carbon::now()->addHours(7)),
             strval(explode(" ",$nextDays)[0]).' 23:59:59'
         ];
 
-        $filmIds = Show::where('deleted',0)
+        $filmIds = Show::where('deleted',"0")
             ->whereBetween('start_time', $rangeDate)
             ->pluck('idphim')->unique()->values();
         
@@ -61,16 +61,16 @@ class ShowController extends Controller
         }    
         $films = [];
         for($i=0; $i < count($filmIds); $i++){
-            $film = Film::where('deleted',0)
+            $film = Film::where('deleted',"0")
                 ->where('idphim', $filmIds[$i])->get();
             if(count($film) == 0) continue;
 
-            $shows = Show::where('deleted',0)
+            $shows = Show::where('deleted',"0")
                 ->whereBetween('start_time', $rangeDate )
-                ->where('idphim', $film->idphim)
+                ->where('idphim', $filmIds[$i])
                 ->orderBy('start_time')
                 ->get();
-            $film->shows = new ShowCollection($shows);
+            $film[0]->shows = new ShowCollection($shows);
             $films[$i] = $film[0];
         }
         if (count($films) > 0){
@@ -178,7 +178,7 @@ class ShowController extends Controller
             strval(explode(" ",$date)[0]).' 23:59:59'
         ];
 
-        $filmIds = Show::where('deleted',0)
+        $filmIds = Show::where('deleted',"0")
             ->whereBetween('start_time', $rangeDate )
             ->pluck('idphim')->unique()->values();
         if(count($filmIds) == 0){
@@ -189,13 +189,13 @@ class ShowController extends Controller
         }
         $films = [];
         for($i=0; $i < count($filmIds); $i++){
-            $film = Film::where('deleted',0)
+            $film = Film::where('deleted',"0")
                 ->where('idphim',$filmIds[$i])->get();
             if(count($film) == 0) continue;
 
-            $shows = Show::where('deleted',0)
+            $shows = Show::where('deleted',"0")
                 ->whereBetween('start_time', $rangeDate )
-                ->where('idphim', $film->idphim)
+                ->where('idphim', $filmIds[$i])
                 ->orderBy('start_time')
                 ->get();
             $film->shows = new ShowCollection($shows);

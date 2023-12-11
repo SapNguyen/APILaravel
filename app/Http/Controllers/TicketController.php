@@ -22,7 +22,7 @@ class TicketController extends Controller
         $request->validate([
             'userId' => 'required'
         ]);
-        $tickets = Ticket::where('deleted',0)
+        $tickets = Ticket::where('deleted',"0")
             ->where('idtk',$request->userId)
             ->get();
         return new TicketCollection($tickets);
@@ -51,7 +51,7 @@ class TicketController extends Controller
         $idshow = $request->idshow;
         $cost = $request->cost;
 
-        $ticket = Ticket::where('deleted',0)
+        $ticket = Ticket::where('deleted',"0")
             ->where('idghe',$idghe)
             ->where('idshow',$idshow)
             ->where('idtk',$idtk)
@@ -80,7 +80,7 @@ class TicketController extends Controller
         $seatStatus->isBooked = 1;
         $seatStatus->save();
 
-        $ticket = Ticket::where('deleted',0)
+        $ticket = Ticket::where('deleted',"0")
             ->where('idghe',$idghe)
             ->where('idshow',$idshow)
             ->where('idtk',$idtk)
@@ -105,7 +105,7 @@ class TicketController extends Controller
         $request->validate([
             'userId' => 'required'
         ]);
-        $ticket = Ticket::where('deleted',0)
+        $ticket = Ticket::where('deleted',"0")
             ->where('idve', $id)->get();
         if(count($ticket) > 0){
             return  response()->json([

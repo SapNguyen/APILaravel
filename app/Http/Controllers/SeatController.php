@@ -53,7 +53,7 @@ class SeatController extends Controller
         $request->validate([
             'showId' => 'required'
         ]);
-        $seat = Seat::where('deleted',0)
+        $seat = Seat::where('deleted',"0")
             ->where('idghe',$id)->get();
         if(!isset($seat[0])){
             $seat = $seat[0];
@@ -90,7 +90,7 @@ class SeatController extends Controller
      */
     public function update(UpdateSeatRequest $request, $id)
     {
-        $seat = Seat::where('deleted',0)
+        $seat = Seat::where('deleted',"0")
             ->where('idghe',$id)->get();
         if(!isset($seat[0])){
             return response()->json([

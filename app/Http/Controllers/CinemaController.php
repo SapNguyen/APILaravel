@@ -52,7 +52,7 @@ class CinemaController extends Controller
         $request->validate([
             'showId' => 'required'
         ]);
-        $cinema = Cinema::where('deleted',0)
+        $cinema = Cinema::where('deleted',"0")
             ->where('idphong',$id)->get();
         if(count($cinema) > 0){
             $cinema[0]->showId = $request->showId;

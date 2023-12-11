@@ -14,6 +14,9 @@ class ShowSeeder extends Seeder
      */
     public function run()
     {
-        \App\Models\Show::factory(100)->create();
+        for ($i = 0; $i < 200; $i++) {
+            \App\Models\Show::factory(1)->create();
+        }
+        // \App\Models\Show::factory(200)->create();
     }
 }
