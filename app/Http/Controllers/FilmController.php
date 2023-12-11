@@ -78,11 +78,42 @@ class FilmController extends Controller
                 ->whereBetween('start_time',[$today, $nextFourDays])
                 ->whereBetween('start_time', $early_time)
                 ->get();
-                
+
             if(!isset($shows[0])) continue;
             array_push($films, $film);
         }
         return new FilmCollection($films);
+    }
+    public function findFilmEarlyShowById($id)
+    {
+        $today =  Carbon::now()->addHours(7)->format("Y-m-d H:i:s");
+        $nextFourDays = Carbon::now()->addHours(7)
+            ->addDays(2)->format("Y-m-d H:i:s");
+        
+        $film = Film::where('deleted','0')
+            ->where('idphim',$id)
+            ->get();
+        if(!isset($film[0])) return [
+            'status' => 'fail',
+            "message" => "Phim không tồn tại"
+        ];
+        $film = $film[0];
+        $early_time = [
+            Carbon::parse($film->release_date)->subDays(2)->setTime(00,00,00)->format("Y-m-d H:i:s"),
+            Carbon::parse($film->release_date)->subDays(1)->setTime(23,59,59)->format("Y-m-d H:i:s")
+        ];
+        $shows = Show::where('deleted','0')
+            ->whereBetween('start_time',[$today, $nextFourDays])
+            ->whereBetween('start_time', $early_time)
+            ->orderBy('start_time')->get();
+
+        $film->shows = new ShowCollection($shows);
+        if(!isset($shows[0])) return [
+            'status' => 'fail',
+            "message" => "Không có suất chiếu sớm"
+        ];
+        
+        return new FilmResource($film);
     }
     /**
      * Show the form for creating a new resource.
@@ -123,12 +154,19 @@ class FilmController extends Controller
             ]);
         }
         $film = $film[0];
-        $currentDate = Carbon::now()->addHours(7)->toDateString();  
+        $currentDate = Carbon::now()->addHours(7)
+            ->format("Y-m-d H:i:s");  
         $daysLater = Carbon::now()->addHours(7)
-            ->addDays(4)->toDateString();
+            ->addDays(4)->setTime(23,59,59)
+            ->format("Y-m-d H:i:s");
+        $film_show_time = [
+            $film->release_date." 00:00:00",
+            $film->end_date." 23:59:59"
+        ];
         $shows = Show::where('deleted',"0")
                 ->orderBy('start_time')
                 ->where('idphim', $film->idphim)
+                ->whereBetween('start_time', $film_show_time)
                 ->whereBetween('start_time', [$currentDate, $daysLater])
                 ->get();
 

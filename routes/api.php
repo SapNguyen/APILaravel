@@ -33,6 +33,7 @@ Route::group(['prefix' => 'films'], function () {
     Route::get('/find/showing', [FilmController::class, 'findFilmShowing']);
     Route::get('/find/upComing', [FilmController::class, 'findFilmUpComing']);
     Route::get('/find/earlyShow', [FilmController::class, 'findFilmEarlyShow']);
+    Route::get('/find/earlyShow/{id}', [FilmController::class, 'findFilmEarlyShowById']);
 });
 
 Route::group(['prefix' => 'cinema'], function () {
@@ -78,8 +79,8 @@ Route::group(['prefix' => 'test'], function () {
         // 
         $film = '2023-12-14';
         return $film_show_time = [
-            $film." 00:00:00",
-            Carbon::parse($film)->subDays(2)->setTime(23,59,59)->format("Y-m-d H:i:s")
+            Carbon::now()->addHours(7)
+            ->addDays(4)->format("Y-m-d H:i:s")
         ];
     });
 });
