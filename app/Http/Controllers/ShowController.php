@@ -198,7 +198,7 @@ class ShowController extends Controller
                 ->where('idphim', $filmIds[$i])
                 ->orderBy('start_time')
                 ->get();
-            $film->shows = new ShowCollection($shows);
+            $film[0]->shows = new ShowCollection($shows);
             $films[$i] = $film[0];
         }
         if (count($films) > 0){

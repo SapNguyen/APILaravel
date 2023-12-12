@@ -19,9 +19,14 @@ class FilmController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $films = Film::where('deleted',"0")->get();
+        if(isset($request->page)){
+            $films = Film::where('deleted',"0")->paginate(7);
+        }
+        else{
+            $films = Film::where('deleted',"0")->get();
+        }
         return new FilmCollection($films);
     }
     public function findFilmShowing()
@@ -34,6 +39,7 @@ class FilmController extends Controller
         if(!isset($filmDBs[0])) return [];
         $films = [];
         foreach ($filmDBs as $film) {
+            if(Carbon::parse($film->release_date)->gt(Carbon::parse($today))) continue;
             $film_show_time = [
                 $film->release_date." 00:00:00",
                 $film->end_date." 23:59:59"

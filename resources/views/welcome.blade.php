@@ -30,6 +30,12 @@
                     @endauth
                 </div>
             @endif
+            <form action="api/test" method="POST" enctype="multipart/form-data">
+                @csrf
+                <input type="file" id="imageInput" accept="image/*" name="image">
+                <button style="border: 1px solid black">Send Image</button>
+            </form>
+            
 
             <div class="max-w-7xl mx-auto p-6 lg:p-8">
                 <div class="flex justify-center">

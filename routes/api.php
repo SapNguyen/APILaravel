@@ -13,6 +13,7 @@ use App\Http\Controllers\TicketController;
 use App\Models\Film;
 use App\Models\Show;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\File;
 
 Route::group(['prefix' => 'users'], function () {
     Route::post('/{id}', [UserController::class, 'update']);
@@ -82,5 +83,28 @@ Route::group(['prefix' => 'test'], function () {
             Carbon::now()->addHours(7)
             ->addDays(4)->format("Y-m-d H:i:s")
         ];
+    });
+    Route::post('/', function(Request $request){
+        $BASE_URL = 
+        $request->validate([
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+        ]);
+
+        $image = $request->image;
+        $path = public_path('images/product/');
+        $imageName = "1_".time() . '_' . $image->getClientOriginalName();
+        $files = File::files($path);
+        if(count($files) > 0){
+            foreach ($files as $file) {
+                $part = explode("_",$file->getFilename());
+                if($part[0] != 1) continue;
+                File::delete($file);
+            }
+        }
+        
+        $image->move($path, $imageName);
+        
+        
+        return $imageName;
     });
 });

@@ -17,9 +17,14 @@ class PromotionController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $promotions = Promotion::where('deleted',"0")->get();
+        if(isset($request->page)){
+            $promotions = Promotion::where('deleted',"0")->paginate(7);
+        }
+        else{
+            $promotions = Promotion::where('deleted',"0")->get();
+        }
         return new PromotionCollection($promotions);
     }
 
