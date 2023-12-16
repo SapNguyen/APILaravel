@@ -30,7 +30,7 @@
                     @endauth
                 </div>
             @endif
-            <form action="api/test" method="POST" enctype="multipart/form-data">
+            <form action="<?php echo $_SERVER["PHP_SELF"];?>" method="POST" enctype="multipart/form-data">
                 @csrf
                 <input type="file" id="imageInput" accept="image/*" name="image">
                 <button style="border: 1px solid black">Send Image</button>
