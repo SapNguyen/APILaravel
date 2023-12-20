@@ -24,7 +24,15 @@ class StoreFilmRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'name' => 'required|string',
+            'image' => 'required|file|mimes:jpeg,png|max:2048',
+            'release_date' => 'required|date',
+            'end_date' => 'required|date',
+            'runtime' => 'required|numeric',
+            'age_validation' => 'required|string',
+            'genre' => 'required|string',
+            'director' => 'required|string',
+            'actor' => 'required|string'
         ];
     }
 }

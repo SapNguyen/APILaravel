@@ -31,6 +31,9 @@ Route::group(['prefix' => 'promotions'], function () {
 Route::group(['prefix' => 'films'], function () {
     Route::get('/{id}', [FilmController::class, 'show']);
     Route::get('/', [FilmController::class, 'index']);
+    Route::post('/createFilm', [FilmController::class, 'store']);
+    Route::post('/updateFilm', [FilmController::class, 'update']);
+    Route::post('/deleteFilm', [FilmController::class, 'destroy']);
     Route::get('/find/showing', [FilmController::class, 'findFilmShowing']);
     Route::get('/find/upComing', [FilmController::class, 'findFilmUpComing']);
     Route::get('/find/earlyShow', [FilmController::class, 'findFilmEarlyShow']);
@@ -38,7 +41,7 @@ Route::group(['prefix' => 'films'], function () {
 });
 
 Route::group(['prefix' => 'cinema'], function () {
-    Route::get('/{id}', [CinemaController::class, 'show']);
+    Route::get('/findByShow', [CinemaController::class, 'show']);
 });
 
 Route::group(['prefix' => 'seat'], function () {

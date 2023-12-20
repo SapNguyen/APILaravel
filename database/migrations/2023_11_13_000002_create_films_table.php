@@ -23,7 +23,7 @@ return new class extends Migration
             $table->integer('runtime');
             $table->string('age_validation');
             $table->string('genre');
-            $table->string('director');
+            $table->string('genre');
             $table->string('actor');
             $table->string('language');
             $table->boolean('deleted')->default(0);

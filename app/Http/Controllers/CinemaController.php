@@ -6,7 +6,13 @@ use App\Models\Cinema;
 use App\Http\Requests\StoreCinemaRequest;
 use App\Http\Requests\UpdateCinemaRequest;
 use App\Http\Resources\CinemaResource;
+use App\Http\Resources\FilmResource;
+use App\Http\Resources\ShowResource;
+use App\Models\Film;
+use App\Models\Show;
 use Illuminate\Http\Request;
+
+use function PHPUnit\Framework\returnSelf;
 
 class CinemaController extends Controller
 {
@@ -47,18 +53,28 @@ class CinemaController extends Controller
      * @param  \App\Models\Cinema  $cinema
      * @return \Illuminate\Http\Response
      */
-    public function show(Request $request, $id)
+    public function show(Request $request)
     {
         $request->validate([
             'showId' => 'required'
         ]);
+        $show = Show::where('deleted',"0")
+            ->where("idshow", $request->showId)->get();
+        if(!isset($show[0])) return;
+
+        $film = Film::where("deleted","0")
+            ->where("idphim", $show[0]->idphim)->get();
+        if(!isset($film[0])) return;
+
         $cinema = Cinema::where('deleted',"0")
-            ->where('idphong',$id)->get();
+            ->where('idphong',$show[0]->idphong)->get();
         if(count($cinema) > 0){
             $cinema[0]->showId = $request->showId;
             return  response()->json([
                 "status" => "success",
-                "cinema" => new CinemaResource($cinema[0])
+                "cinema" => new CinemaResource($cinema[0]),
+                "show" => new ShowResource($show[0]),
+                "film" => new FilmResource($film[0])
             ]);
         }
 

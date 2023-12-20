@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Response;
 use App\Http\Requests\StoreFilmRequest;
 use App\Http\Resources\ShowCollection;
 use App\Models\Show;
+use App\Models\User;
 use Carbon\Carbon;
 
 class FilmController extends Controller
@@ -139,7 +140,36 @@ class FilmController extends Controller
      */
     public function store(StoreFilmRequest $request)
     {
-        //
+        $film = new Film();
+        $check = Film::where('name', $request->name)
+            ->where('deleted',0)->get();
+        if(count($check) > 0){
+            return response()->json([
+                'status' => "fail",
+                'message' => "Phim đã tồn tại"
+            ]);
+        }
+        $film->name = $request->name;
+        $film->image = $request->image;
+        if(isset($request->description)){
+            $film->description = $request->description;
+        }
+        $film->release_date = $request->release_date;
+        $film->end_date = $request->end_date;
+        $film->runtime = $request->runtime;
+        $film->age_validation = $request->age_validation;
+        $film->genre = $request->genre;
+        $film->director = $request->director;
+        $film->actor = $request->actor;
+        if(isset($request->language)){
+            $film->language = $request->language;
+        }
+        $film->deleted = 0;
+        $film->save();
+        return response()->json([
+            'status' => "success",
+            'message' => "Thêm phim thành công"
+        ]);
     }
 
     /**
