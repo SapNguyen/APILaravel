@@ -18,11 +18,16 @@ class TicketResource extends JsonResource
     public function toArray($request)
     {
         $user = User::find($this->idtk);
-        $seat = Seat::find($this->idghe);
+        $seatIds = explode(",",$this->idghe);
+        $seatNames = [];
+        foreach ($seatIds as $seatId) {
+            $seat = Seat::find($seatId);
+            array_push($seatNames, $seat->row.$seat->column);
+        }
         $show = Show::find($this->idshow);
         return [
             "user" => new UserResource($user),
-            "seat" => $seat->row.$seat->column,
+            "seat" => implode(", ",$seatNames),
             "show" => new ShowResource($show),
             "cost" => number_format($this->cost)
         ];
