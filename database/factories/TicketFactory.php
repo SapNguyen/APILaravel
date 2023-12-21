@@ -31,6 +31,7 @@ class TicketFactory extends Factory
         $idshow = null;
         while (!$valid) {
             $idghe = $seats->random()->idghe;
+            $seat = Seat::find($idghe);
             $idshow = $shows->random()->idshow;
             $ticket = Ticket::where('idghe', $idghe)
                 ->where('idshow', $idshow)
@@ -49,6 +50,7 @@ class TicketFactory extends Factory
             'idghe' => $idghe,
             'idshow' => $idshow,
             'idtk' => $users->random()->idtk,
+            'seat' => $seat[0]->row . $seat[0]->column,
             'cost' => fake()->randomFloat(0, 100000, 200000),
             'deleted' => 0
         ];

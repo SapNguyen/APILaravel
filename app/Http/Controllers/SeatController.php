@@ -101,10 +101,10 @@ class SeatController extends Controller
         $seatStatus = SeatStatus::where('idghe', $id)
                 ->where('idshow', $request->showId)
                 ->get();
-        if(count($seatStatus) > 0 && $request->isSelected == 0){
+        if(count($seatStatus) > 0 && $request->isSelected == 0 && $seatStatus[0]->isBooked == 0){
             $seatStatus[0]->delete();
         }
-        elseif(count($seatStatus) == 0 && $request->isSelected == 1){
+        elseif(count($seatStatus) == 0 && $request->isSelected == 1 && $seatStatus[0]->isBooked == 0){
             $seatStatus = new SeatStatus();
             $seatStatus->isSelected = $request->isSelected;
             $seatStatus->idshow = $request->showId;
@@ -113,7 +113,7 @@ class SeatController extends Controller
             $seatStatus->save();
         }
 
-        $seat->showId = $request->showId;
+        $seat[0]->showId = $request->showId;
         return response()->json([
             'status' => 'success',
             "message" => "Cập nhật thành công",

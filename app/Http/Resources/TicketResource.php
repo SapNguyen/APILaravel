@@ -19,16 +19,16 @@ class TicketResource extends JsonResource
     {
         $user = User::find($this->idtk);
         $seatIds = explode(",",$this->idghe);
-        $seatNames = [];
-        foreach ($seatIds as $seatId) {
-            $seat = Seat::find($seatId);
-            array_push($seatNames, $seat->row.$seat->column);
+        $seat = Seat::find($this->idghe);
+        $seatNames = $seat->row . $seat->column;
+        if($this->seat != null){
+            $seatNames = $this->seat;
         }
         $show = Show::find($this->idshow);
         return [
             "id" => $this->idve,
             "user" => new UserResource($user),
-            "seat" => implode(", ",$seatNames),
+            "seat" => $seatNames,
             "show" => new ShowResource($show),
             "cost" => number_format($this->cost)
         ];

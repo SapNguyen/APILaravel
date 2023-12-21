@@ -7,6 +7,7 @@ use App\Http\Requests\StoreTicketRequest;
 use App\Http\Requests\UpdateTicketRequest;
 use App\Http\Resources\TicketCollection;
 use App\Http\Resources\TicketResource;
+use App\Models\Seat;
 use App\Models\SeatStatus;
 use Illuminate\Http\Request;
 
@@ -46,42 +47,57 @@ class TicketController extends Controller
      */
     public function store(StoreTicketRequest $request)
     {
-        $idghe = $request->idghe;
+        $idghes = explode(",", $request->idghe);
         $idtk = $request->idtk;
         $idshow = $request->idshow;
         $cost = $request->cost;
+        $seatName = [];
+        foreach ($idghes as $seatId){
+            $seat = Seat::find($seatId);
+            array_push($seatName, $seat->row . $seat->column);
+        }
+        $seatName = implode(",", $seatName);
 
         $ticket = Ticket::where('deleted',"0")
-            ->where('idghe',$idghe)
             ->where('idshow',$idshow)
             ->where('idtk',$idtk)
             ->get();
-        if(count($ticket) > 0) return;
+        if(count($ticket) > 0 ) {
+            if($ticket[0]->seat == $seatName){
+                return response()->json([
+                    "status" => "fail",
+                    "message" => "Ghế đã được đặt"
+                ]);
+            }
+        }
 
         $ticket = new Ticket();
         $ticket->idtk=$idtk;
         $ticket->cost=$cost;
         $ticket->idshow=$idshow;
-        $ticket->idghe=$idghe;
+        $ticket->seat=$seatName;
+        $ticket->idghe=$idghes[0];
         $ticket->save();
 
-        $seatStatus = SeatStatus::where('idghe', $idghe)
+        foreach ($idghes as $seatId){
+            $seatStatus = SeatStatus::where('idghe', $seatId)
                 ->where('idshow', $idshow)
                 ->get();
-        if(count($seatStatus) > 0){
-            $seatStatus = $seatStatus[0];
-        }else{
-            $seatStatus = new SeatStatus();
+            if(count($seatStatus) > 0){
+                $seatStatus = $seatStatus[0];
+            }else{
+                $seatStatus = new SeatStatus();
+            }
+            
+            $seatStatus->idshow = $idshow;
+            $seatStatus->idghe = $seatId;
+            $seatStatus->isSelected = 0;
+            $seatStatus->isBooked = 1;
+            $seatStatus->save();
         }
-        
-        $seatStatus->idshow = $idshow;
-        $seatStatus->idghe = $idghe;
-        $seatStatus->isSelected = 0;
-        $seatStatus->isBooked = 1;
-        $seatStatus->save();
 
         $ticket = Ticket::where('deleted',"0")
-            ->where('idghe',$idghe)
+            ->where('seat',$seatName)
             ->where('idshow',$idshow)
             ->where('idtk',$idtk)
             ->get();
@@ -90,7 +106,7 @@ class TicketController extends Controller
         return response()->json([
             'status' => 'success',
             "message" => "Đặt vé thành công",
-            "user" => new TicketResource($ticket[0])
+            "ticket" => new TicketResource($ticket[0])
         ]);
     }
 
