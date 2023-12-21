@@ -26,6 +26,7 @@ class TicketResource extends JsonResource
         }
         $show = Show::find($this->idshow);
         return [
+            "id" => $this->idve,
             "user" => new UserResource($user),
             "seat" => implode(", ",$seatNames),
             "show" => new ShowResource($show),
